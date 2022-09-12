@@ -25,7 +25,7 @@ def get_new_objects(client, bucket: str,
     objects: typing.List[typing.Tuple[str, datetime]] = []
 
     for obj in response['Contents']:
-        modified_date = obj['LastModified']
+        modified_date = obj['LastModified'].replace(tzinfo=utc_tz)
         if modified_date > last_modified.replace(tzinfo=utc_tz):
             objects.append((obj['Key'], modified_date))
 
