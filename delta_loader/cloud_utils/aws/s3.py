@@ -4,7 +4,7 @@ import typing
 
 def get_new_objects(client, bucket: str,
                     folder_path: str,
-                    last_modified: datetime.datetime) -> typing.List[typing.Tuple[str, datetime]]:
+                    last_modified: datetime.datetime) -> typing.List[typing.Tuple[str, datetime.datetime]]:
     """
     Retorna lista de novos objetos criados no bucket e na pasta especificada a partir de uma data.
 
