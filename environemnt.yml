@@ -1,0 +1,10 @@
+name: delta-loader
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - openjdk=11
+  - python=3.10
+  - poetry=1.1
