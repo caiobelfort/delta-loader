@@ -1,10 +1,11 @@
 import datetime
 import typing
+from typing import List, Any
 
 
-def get_new_objects(client, bucket: str,
-                    folder_path: str,
-                    last_modified: datetime.datetime) -> typing.List[typing.Tuple[str, datetime.datetime]]:
+def get_subfolders_from_prefix(client,
+                               bucket: str,
+                               prefix: str) -> typing.List[str]:
     """
     Retorna lista de novos objetos criados no bucket e na pasta especificada a partir de uma data.
 
@@ -15,18 +16,16 @@ def get_new_objects(client, bucket: str,
     :return: Lista de tuplas com nome do objeto e data de modificação
     """
 
-    utc_tz = datetime.timezone.utc  # alias
-
-    response = client.list_objects_v2(
+    paginator = client.get_paginator('list_objects_v2')
+    response = paginator.paginate(
         Bucket=bucket,
-        StartAfter=folder_path
+        Prefix=prefix,
+        Delimiter="/"
     )
 
-    objects: typing.List[typing.Tuple[str, datetime]] = []
+    result: list[Any] = []
+    for page in response:
+        files = page['CommonPrefixes']
+        result.extend([f['Prefix'] for f in files])
 
-    for obj in response['Contents']:
-        modified_date = obj['LastModified'].replace(tzinfo=utc_tz)
-        if modified_date > last_modified.replace(tzinfo=utc_tz):
-            objects.append((obj['Key'], modified_date))
-
-    return objects
+    return result

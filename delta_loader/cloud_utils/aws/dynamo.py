@@ -1,4 +1,7 @@
-def get_item(client, table_name: str, key: dict) -> dict:
+from typing import Optional
+
+
+def get_item(client, table_name: str, key: dict) -> Optional[dict]:
     """
     Retorna item da tabela DynamoDB.
 
@@ -7,13 +10,16 @@ def get_item(client, table_name: str, key: dict) -> dict:
     :param key: Chave do item
     :return: Item
     """
+
     table = client.Table(table_name)
     response = table.get_item(
         TableName=table_name,
         Key=key
     )
 
-    return response['Item']
+    if "Item" in response:
+        return response["Item"]
+    return None
 
 
 def put_item(client, table_name: str, item: dict) -> None:
@@ -30,4 +36,3 @@ def put_item(client, table_name: str, item: dict) -> None:
         TableName=table_name,
         Item=item
     )
-
